@@ -1,0 +1,1702 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Sistema de Consentimiento Estético - SkillHands</title>
+<style>
+  :root {
+    --primary-color: #d4b996;
+    --primary-hover: #c0a586;
+    --accent-color: #e8c4c4;
+    --border-color: #e0d5c8;
+    --light-gray: #f8f4ee;
+    --dark-text: #5a4a42;
+    --error-bg: #f5e6e6;
+    --success-bg: #e8f0e6;
+  }
+  
+  body {
+    font-family: 'Roboto', 'Segoe UI', Arial, sans-serif;
+    max-width: 900px;
+    margin: 0 auto;
+    background: #faf9f7;
+    padding: 0;
+    color: var(--dark-text);
+    line-height: 1.6;
+  }
+  
+  .header {
+    background: linear-gradient(135deg, var(--primary-color), #d9c7b8);
+    color: #5a4a42;
+    padding: 20px;
+    text-align: center;
+    border-radius: 8px 8px 0 0;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  }
+  
+  .header h2 {
+    margin: 0;
+    font-size: 1.8em;
+    font-weight: 300;
+    letter-spacing: 1px;
+  }
+  
+  .header .subtitle {
+    font-size: 0.9em;
+    opacity: 0.9;
+    font-weight: 300;
+  }
+  
+  .login-container {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    padding: 30px;
+    margin: 20px auto;
+    max-width: 500px;
+    border: 1px solid var(--border-color);
+  }
+  
+  .form-container {
+    display: none;
+    background: white;
+    padding: 30px;
+    border-radius: 0 0 8px 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    border: 1px solid var(--border-color);
+  }
+  
+  .admin-container {
+    display: none;
+    background: white;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    margin: 20px auto;
+    max-width: 800px;
+    border: 1px solid var(--border-color);
+  }
+  
+  .active-form {
+    display: block;
+  }
+  
+  label {
+    font-weight: 500;
+    display: block;
+    margin-top: 20px;
+    margin-bottom: 8px;
+    color: var(--dark-text);
+  }
+  
+  input[type="text"],
+  input[type="password"],
+  input[type="date"],
+  input[type="email"],
+  input[type="tel"],
+  textarea,
+  select {
+    width: 100%;
+    padding: 12px;
+    margin-top: 5px;
+    border-radius: 6px;
+    border: 1px solid var(--border-color);
+    box-sizing: border-box;
+    font-size: 15px;
+    transition: all 0.3s;
+    background-color: #fefefe;
+  }
+  
+  input:focus, textarea:focus, select:focus {
+    border-color: var(--primary-color);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(212, 185, 150, 0.1);
+  }
+  
+  .input-error {
+    border-color: var(--accent-color) !important;
+    background-color: var(--error-bg);
+  }
+  
+  .error-message {
+    color: #b5838d;
+    font-size: 13px;
+    margin-top: 5px;
+    display: none;
+  }
+  
+  .checkbox-group {
+    margin-top: 8px;
+    margin-bottom: 15px;
+  }
+  
+  .checkbox-group label {
+    font-weight: normal;
+    margin-right: 25px;
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+  }
+  
+  .checkbox-group input[type="radio"] {
+    margin-right: 8px;
+    cursor: pointer;
+    accent-color: var(--primary-color);
+  }
+  
+  .section-title {
+    font-weight: 500;
+    color: var(--primary-color);
+    margin-top: 30px;
+    margin-bottom: 15px;
+    font-size: 1.1em;
+    border-bottom: 1px solid #f3e5f5;
+    padding-bottom: 8px;
+  }
+  
+  button {
+    margin-top: 25px;
+    background: var(--primary-color);
+    color: var(--dark-text);
+    padding: 14px 28px;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 500;
+    transition: all 0.3s;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    letter-spacing: 0.5px;
+  }
+  
+  button:hover {
+    background: var(--primary-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+  }
+  
+  button:active {
+    transform: translateY(0);
+  }
+  
+  button:disabled {
+    background: #e1d9cf;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+  }
+  
+  .button-danger {
+    background: #e8c4c4;
+  }
+  
+  .button-danger:hover {
+    background: #d8b4b4;
+  }
+  
+  .button-success {
+    background: #c8d4b9;
+  }
+  
+  .button-success:hover {
+    background: #b8c4a9;
+  }
+  
+  .button-secondary {
+    background: #d4c8b8;
+  }
+  
+  .button-secondary:hover {
+    background: #c4b8a8;
+  }
+  
+  .button-group {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin-top: 30px;
+    justify-content: space-between;
+  }
+  
+  #consentimiento {
+    margin-top: 35px;
+    background: white;
+    border: 1px solid var(--border-color);
+    padding: 30px;
+    border-radius: 8px;
+    white-space: pre-wrap;
+    min-height: 300px;
+    line-height: 1.7;
+    font-size: 15px;
+  }
+  
+  .required-field::after {
+    content: " *";
+    color: #b5838d;
+  }
+  
+  fieldset {
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 20px;
+    margin-top: 25px;
+    background-color: var(--light-gray);
+  }
+  
+  legend {
+    font-weight: 500;
+    padding: 0 10px;
+    color: var(--primary-color);
+    font-size: 1.05em;
+  }
+  
+  .contraindication-group {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 15px;
+    margin-top: 15px;
+  }
+  
+  .contraindication-item {
+    background: var(--light-gray);
+    padding: 12px 15px;
+    border-radius: 6px;
+    border-left: 4px solid var(--primary-color);
+  }
+  
+  .otros-procedimientos-container {
+    display: none;
+    margin-top: 10px;
+    padding: 10px;
+    background-color: #f3e5f5;
+    border-radius: 6px;
+  }
+  
+  .progress-container {
+    width: 100%;
+    background-color: #f1f1f1;
+    border-radius: 5px;
+    margin-top: 20px;
+    display: none;
+  }
+  
+  .progress-bar {
+    width: 0;
+    height: 24px;
+    background: linear-gradient(90deg, var(--primary-color), #e8c4c4);
+    border-radius: 5px;
+    text-align: center;
+    line-height: 24px;
+    color: var(--dark-text);
+    transition: width 0.5s;
+    font-size: 14px;
+  }
+  
+  .success-message {
+    color: #6b8e23;
+    font-weight: 500;
+    margin-top: 20px;
+    padding: 12px;
+    background: var(--success-bg);
+    border-radius: 6px;
+    display: none;
+    text-align: center;
+  }
+  
+  .doctor-info {
+    background: var(--light-gray);
+    padding: 15px;
+    border-radius: 6px;
+    margin-bottom: 20px;
+    border-left: 4px solid var(--primary-color);
+  }
+  
+  .logout-btn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: #e8c4c4;
+    padding: 8px 15px;
+    font-size: 14px;
+    border-radius: 30px;
+  }
+  
+  .admin-btn {
+    position: absolute;
+    top: 20px;
+    right: 150px;
+    background: #d4c8b8;
+    padding: 8px 15px;
+    font-size: 14px;
+    border-radius: 30px;
+  }
+  
+  .security-notice {
+    font-size: 0.85em;
+    color: #666;
+    text-align: center;
+    margin-top: 30px;
+    padding: 10px;
+    border-top: 1px solid #eee;
+  }
+  
+  .medicos-list {
+    margin-top: 20px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    padding: 15px;
+    max-height: 300px;
+    overflow-y: auto;
+    background-color: var(--light-gray);
+  }
+  
+  .medico-item {
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .medico-item:last-child {
+    border-bottom: none;
+  }
+  
+  .medico-actions {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .action-btn {
+    padding: 5px 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 13px;
+    border-radius: 30px;
+  }
+  
+  .edit-btn {
+    background: #ffc107;
+    color: #212529;
+  }
+  
+  .delete-btn {
+    background: #dc3545;
+    color: white;
+  }
+  
+  /* Estilos mejorados para firmas */
+  .firmas-container {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 30px;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+  
+  .firma-section {
+    flex: 1;
+    min-width: 300px;
+  }
+  
+  .firma-section h4 {
+    color: var(--primary-color);
+    margin-bottom: 15px;
+    text-align: center;
+    font-weight: 500;
+  }
+  
+  .firma-canvas-container {
+    border: 2px dashed var(--primary-color);
+    border-radius: 6px;
+    padding: 10px;
+    margin-bottom: 10px;
+    background: white;
+    position: relative;
+    transition: all 0.3s;
+  }
+
+  .firma-canvas-container:hover {
+    border-color: var(--dark-text);
+    box-shadow: 0 0 0 3px rgba(212, 185, 150, 0.2);
+  }
+
+  .firma-canvas-container canvas {
+    display: block;
+    width: 100%;
+    height: 150px;
+    cursor: crosshair;
+    background-color: white;
+    background-image: linear-gradient(to bottom, #f8f4ee 1px, transparent 1px);
+    background-size: 100% 30px;
+    position: relative;
+  }
+
+  .placeholder-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #ccc;
+    font-style: italic;
+    pointer-events: none;
+    transition: opacity 0.3s;
+    text-align: center;
+    width: 100%;
+  }
+
+  .firma-active .placeholder-text {
+    opacity: 0;
+  }
+
+  .limpiar-firma-btn {
+    background: #d4c8b8;
+    color: var(--dark-text);
+    padding: 8px 12px;
+    font-size: 13px;
+    margin-top: 10px;
+    width: 100%;
+    border-radius: 30px;
+    transition: all 0.3s;
+  }
+
+  .limpiar-firma-btn:hover {
+    background: #c4b8a8;
+  }
+  
+  .firma-info {
+    margin-top: 15px;
+    font-size: 14px;
+  }
+  
+  .firma-info p {
+    margin: 5px 0;
+  }
+  
+  .firma-validation {
+    margin-top: 20px;
+    padding: 10px;
+    background-color: #fff3cd;
+    border-left: 4px solid #ffc107;
+    border-radius: 4px;
+  }
+  
+  .validation-message {
+    color: #856404;
+    margin: 0;
+    font-size: 14px;
+  }
+  
+  /* Ver contraseña */
+  .password-container {
+    position: relative;
+  }
+  
+  .toggle-password {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #666;
+  }
+  
+  /* Autocompletado procedimientos */
+  .autocomplete-container {
+    position: relative;
+  }
+  
+  .autocomplete-list {
+    position: absolute;
+    z-index: 1000;
+    width: 100%;
+    max-height: 200px;
+    overflow-y: auto;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 0 0 4px 4px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    display: none;
+  }
+  
+  .autocomplete-item {
+    padding: 8px 12px;
+    cursor: pointer;
+  }
+  
+  .autocomplete-item:hover {
+    background-color: #f5f5f5;
+  }
+  
+  /* Para imprimir solo el consentimiento */
+  @media print {
+    body * {
+      visibility: hidden;
+    }
+    #consentimiento, #consentimiento * {
+      visibility: visible;
+    }
+    #consentimiento {
+      position: absolute;
+      left: 0; 
+      top: 0;
+      width: 100%;
+      margin: 0;
+      padding: 20px;
+      border: none;
+      box-shadow: none;
+      background: white;
+      font-size: 14px;
+    }
+    
+    .limpiar-firma-btn {
+      display: none;
+    }
+    
+    .firma-validation {
+      display: none !important;
+    }
+    
+    .firma-info {
+      margin-top: 5px;
+      font-size: 12px;
+    }
+    
+    .firma-canvas-container {
+      padding: 5px;
+      margin-bottom: 5px;
+    }
+    
+    .firma-section h4 {
+      margin-bottom: 5px;
+      font-size: 14px;
+    }
+    
+    .security-notice {
+      display: none;
+    }
+    
+    /* Asegurar que declaraciones empiecen en nueva página */
+    .declaraciones-section {
+      page-break-before: always;
+      margin-top: 20px;
+    }
+    
+    /* Asegurar que firmas estén en una sola página */
+    .firmas-section {
+      page-break-before: always;
+      margin-top: 20px;
+    }
+    
+    /* Eliminar página en blanco al final */
+    .firmas-section:last-child {
+      page-break-after: avoid;
+    }
+    
+    /* Numeración de páginas */
+    @page {
+      size: letter;
+      margin: 1.5cm;
+      @bottom-center {
+        content: counter(page);
+        font-size: 10px;
+        color: #5a4a42;
+      }
+    }
+  }
+  
+  /* Responsive */
+  @media (max-width: 768px) {
+    body {
+      padding: 10px;
+    }
+    
+    .header {
+      padding: 15px;
+    }
+    
+    .contraindication-group {
+      grid-template-columns: 1fr;
+    }
+    
+    .button-group {
+      flex-direction: column;
+    }
+    
+    button {
+      width: 100%;
+    }
+    
+    .logout-btn, .admin-btn {
+      position: static;
+      margin-top: 15px;
+      width: 100%;
+    }
+    
+    .firmas-container {
+      flex-direction: column;
+    }
+    
+    .firma-section {
+      margin-bottom: 25px;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h2>Clínica SkillHands - Consentimiento Informado</h2>
+  <div class="subtitle">Procedimientos estéticos seguros y personalizados</div>
+</div>
+
+<!-- Selección de Médico -->
+<div id="medicoSelection" class="login-container active-form">
+  <h3 style="text-align: center; color: var(--primary-color);">Seleccione Profesional</h3>
+  
+  <label for="selectMedico" class="required-field">Profesional:</label>
+  <select id="selectMedico" required>
+    <option value="">-- Seleccione un profesional --</option>
+  </select>
+  
+  <div class="button-group" style="justify-content: center;">
+    <button type="button" id="selectBtn">Continuar</button>
+    <button type="button" id="addMedicoBtn" class="button-secondary">Agregar Profesional</button>
+  </div>
+  
+  <div class="security-notice">
+    <i class="fas fa-lock"></i> Sistema seguro para profesionales de la estética
+  </div>
+</div>
+
+<!-- Formulario Principal (solo visible después de seleccionar médico) -->
+<div id="mainForm" class="form-container">
+  <button id="logoutBtn" class="logout-btn button-danger">Cambiar Profesional</button>
+  
+  <div class="doctor-info">
+    <strong>Profesional:</strong> <span id="loggedDoctor"></span>
+    <br>
+    <strong>RUT:</strong> <span id="loggedRUT"></span>
+    <br>
+    <strong>Fecha de acceso:</strong> <span id="accessDate"></span>
+  </div>
+  
+  <div class="section-title">Datos del Paciente</div>
+  
+  <label for="fechaCompleta" class="required-field">Ciudad y fecha:</label>
+  <input type="text" id="fechaCompleta" placeholder="Ej: Coquimbo, 20 de junio de 2025" required>
+  <div id="fechaError" class="error-message">Por favor ingrese la ciudad y fecha correctamente</div>
+
+  <label for="nombre" class="required-field">Nombre completo del paciente:</label>
+  <input type="text" id="nombre" placeholder="Nombre completo" required>
+  <div id="nombreError" class="error-message">Por favor ingrese el nombre completo</div>
+
+  <label for="nacimiento" class="required-field">Fecha de nacimiento:</label>
+  <input type="date" id="nacimiento" required max="">
+  <div id="nacimientoError" class="error-message">Fecha de nacimiento inválida</div>
+
+  <label for="run" class="required-field">RUN / Documento de identidad:</label>
+  <input type="text" id="run" placeholder="Ej. 12.345.678-9" required>
+  <div id="runError" class="error-message">Formato inválido (use 12.345.678-9 o 12345678-9)</div>
+
+  <label for="email">Correo electrónico del paciente:</label>
+  <input type="email" id="email" placeholder="ejemplo@email.com">
+  <div id="emailError" class="error-message">Ingrese un email válido</div>
+
+  <label for="telefono">Teléfono de contacto:</label>
+  <input type="tel" id="telefono" placeholder="+56 9 1234 5678">
+  
+  <div class="section-title">Información del Tratamiento</div>
+  
+  <label for="detalleTratamiento" class="required-field">Procedimiento(s) a realizar:</label>
+  <div class="autocomplete-container">
+    <textarea id="detalleTratamiento" rows="2" placeholder="Ej: Lipoescultura ultrasónica, Blefaroplastia superior" required></textarea>
+    <div class="autocomplete-list" id="autocompleteList"></div>
+  </div>
+  <div id="tratamientoError" class="error-message">Por favor ingrese al menos un procedimiento</div>
+
+  <fieldset>
+    <legend><strong>Evaluación Médica</strong></legend>
+    
+    <div class="contraindication-group">
+      <div class="contraindication-item">
+        <label>Embarazo:</label>
+        <div class="checkbox-group">
+          <label><input type="radio" name="embarazo" value="SI" required> SI</label>
+          <label><input type="radio" name="embarazo" value="NO"> NO</label>
+        </div>
+      </div>
+      
+      <div class="contraindication-item">
+        <label>Hipertensión:</label>
+        <div class="checkbox-group">
+          <label><input type="radio" name="hipertension" value="SI" required> SI</label>
+          <label><input type="radio" name="hipertension" value="NO"> NO</label>
+        </div>
+      </div>
+      
+      <div class="contraindication-item">
+        <label>Problemas cardíacos:</label>
+        <div class="checkbox-group">
+          <label><input type="radio" name="insuficiencia" value="SI" required> SI</label>
+          <label><input type="radio" name="insuficiencia" value="NO"> NO</label>
+        </div>
+      </div>
+      
+      <div class="contraindication-item">
+        <label>Trombosis/hemorragias:</label>
+        <div class="checkbox-group">
+          <label><input type="radio" name="trombosis" value="SI" required> SI</label>
+          <label><input type="radio" name="trombosis" value="NO"> NO</label>
+        </div>
+      </div>
+      
+      <div class="contraindication-item">
+        <label>Diabetes:</label>
+        <div class="checkbox-group">
+          <label><input type="radio" name="diabetes" value="SI" required> SI</label>
+          <label><input type="radio" name="diabetes" value="NO"> NO</label>
+        </div>
+      </div>
+      
+      <div class="contraindication-item">
+        <label>Cáncer/tumores:</label>
+        <div class="checkbox-group">
+          <label><input type="radio" name="cancer" value="SI" required> SI</label>
+          <label><input type="radio" name="cancer" value="NO"> NO</label>
+        </div>
+      </div>
+      
+      <div class="contraindication-item">
+        <label>Alergias:</label>
+        <div class="checkbox-group">
+          <label><input type="radio" name="alergias" value="SI" required> SI</label>
+          <label><input type="radio" name="alergias" value="NO"> NO</label>
+        </div>
+      </div>
+      
+      <div class="contraindication-item">
+        <label>Dermatitis:</label>
+        <div class="checkbox-group">
+          <label><input type="radio" name="dermatitis" value="SI" required> SI</label>
+          <label><input type="radio" name="dermatitis" value="NO"> NO</label>
+        </div>
+      </div>
+      
+      <div class="contraindication-item">
+        <label>Epilepsia:</label>
+        <div class="checkbox-group">
+          <label><input type="radio" name="epilepsia" value="SI" required> SI</label>
+          <label><input type="radio" name="epilepsia" value="NO"> NO</label>
+        </div>
+      </div>
+      
+      <div class="contraindication-item">
+        <label>Micosis:</label>
+        <div class="checkbox-group">
+          <label><input type="radio" name="micosis" value="SI" required> SI</label>
+          <label><input type="radio" name="micosis" value="NO"> NO</label>
+        </div>
+      </div>
+      
+      <div class="contraindication-item">
+        <label>Otros procedimientos estéticos?:</label>
+        <div class="checkbox-group">
+          <label><input type="radio" name="otros_procedimientos" value="SI" required> SI</label>
+          <label><input type="radio" name="otros_procedimientos" value="NO"> NO</label>
+        </div>
+        <div class="otros-procedimientos-container" id="otrosProcedimientosContainer">
+          <label for="detalleOtrosProcedimientos">¿Cuáles?</label>
+          <textarea id="detalleOtrosProcedimientos" rows="2" placeholder="Describa los procedimientos estéticos previos"></textarea>
+        </div>
+      </div>
+    </div>
+    
+    <label for="otrasContraindicaciones">Otras contraindicaciones o observaciones médicas:</label>
+    <textarea id="otrasContraindicaciones" rows="3" placeholder="Registre cualquier otra condición relevante o observación importante..."></textarea>
+  </fieldset>
+
+  <div class="progress-container" id="progressContainer">
+    <div class="progress-bar" id="progressBar">0%</div>
+  </div>
+  
+  <div class="success-message" id="successMessage">Consentimiento generado correctamente!</div>
+  
+  <div class="button-group">
+    <button type="button" id="generarBtn">Generar Consentimiento</button>
+    <button type="button" id="imprimirBtn" disabled>Imprimir/PDF</button>
+    <button type="button" id="limpiarBtn">Nuevo Formulario</button>
+  </div>
+  
+  <div id="consentimiento"></div>
+  
+  <div class="security-notice">
+    <strong>Confidencialidad:</strong> Este documento contiene información médica sensible. Asegúrese de manejarlo conforme a las normativas de protección de datos y privacidad.
+  </div>
+</div>
+
+<!-- Panel para Agregar Médicos -->
+<div id="addMedicoPanel" class="admin-container">
+  <h3 style="text-align: center; color: var(--primary-color);">Agregar Nuevo Profesional</h3>
+  
+  <button id="backToLoginBtn" class="button-danger" style="margin-bottom: 20px;">← Volver a la selección</button>
+  
+  <label for="newMedicoNombre" class="required-field">Nombre completo:</label>
+  <input type="text" id="newMedicoNombre" placeholder="Ej: Dra. Ana Martínez" required>
+  
+  <label for="newMedicoRUT" class="required-field">RUT:</label>
+  <input type="text" id="newMedicoRUT" placeholder="Ej: 12345678-9" required>
+  
+  <label for="newMedicoUsuario" class="required-field">Nombre de usuario (para acceso):</label>
+  <input type="text" id="newMedicoUsuario" placeholder="Ej: dra.martinez" required>
+  
+  <label for="newMedicoPassword" class="required-field">Contraseña (para acceso):</label>
+  <div class="password-container">
+    <input type="password" id="newMedicoPassword" placeholder="Ingrese una contraseña segura" required>
+    <span class="toggle-password" id="toggleNewPassword">👁️</span>
+  </div>
+  
+  <div class="button-group">
+    <button type="button" id="saveMedicoBtn" class="button-success">Guardar Profesional</button>
+  </div>
+  
+  <div class="security-notice">
+    Todos los profesionales registrados aparecerán en la lista de selección.
+  </div>
+</div>
+
+<!-- jsPDF y html2canvas CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+<script>
+  // Configuración inicial
+  const { jsPDF } = window.jspdf;
+  let consentimientoTexto = '';
+  let currentUser = null;
+  let isDrawing = false;
+  let lastX = 0;
+  let lastY = 0;
+  let currentCanvas = null;
+  
+  // Base de datos de médicos (en un sistema real esto estaría en un servidor)
+  let medicos = [
+    { 
+      usuario: 'dra.wileidy', 
+      password: 'draperez', 
+      nombre: 'Dra. Wileidy Perez', 
+      rut: '27.322.442-4',
+      esPrincipal: true
+    }
+  ];
+  
+  // Lista de procedimientos comunes para autocompletado
+  const procedimientosComunes = [
+    "Lipoescultura ultrasónica",
+    "Blefaroplastia superior",
+    "Rinoplastia",
+    "Mamoplastia de aumento",
+    "Abdominoplastia",
+    "Liposucción",
+    "Botox",
+    "Rellenos faciales",
+    "Lifting facial",
+    "Depilación láser",
+    "Peeling químico",
+    "Mesoterapia",
+    "Carboxiterapia",
+    "Hilos tensores",
+    "Radiofrecuencia facial"
+  ];
+  
+  // Configurar fecha máxima para nacimiento (hoy)
+  document.getElementById('nacimiento').max = new Date().toISOString().split('T')[0];
+  
+  // Auto-completar fecha actual
+  function updateCurrentDate() {
+    const fechaActual = new Date();
+    const opcionesFecha = { day: 'numeric', month: 'long', year: 'numeric' };
+    const fechaFormateada = fechaActual.toLocaleDateString('es-ES', opcionesFecha);
+    document.getElementById('fechaCompleta').value = `Coquimbo, ${fechaFormateada}`;
+    
+    // Mostrar fecha de acceso
+    const opcionesHora = { hour: '2-digit', minute: '2-digit' };
+    const horaFormateada = fechaActual.toLocaleTimeString('es-ES', opcionesHora);
+    document.getElementById('accessDate').textContent = `${fechaFormateada} a las ${horaFormateada}`;
+  }
+  
+  // Función para formatear fecha correctamente (solución problema zona horaria)
+  function formatDateForPDF(dateString) {
+    if (!dateString) return '';
+    
+    // Ajustar por problema de zona horaria
+    const dateObj = new Date(dateString);
+    dateObj.setMinutes(dateObj.getMinutes() + dateObj.getTimezoneOffset());
+    
+    const meses = [
+      "enero", "febrero", "marzo", "abril", "mayo", "junio",
+      "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"
+    ];
+    
+    const dia = dateObj.getDate();
+    const mes = meses[dateObj.getMonth()];
+    const anio = dateObj.getFullYear();
+    
+    return `${dia} de ${mes} de ${anio}`;
+  }
+  
+  // Función para obtener fecha y hora actual formateada
+  function getCurrentDateTime() {
+    const now = new Date();
+    const opcionesFecha = { day: 'numeric', month: 'long', year: 'numeric' };
+    const opcionesHora = { hour: '2-digit', minute: '2-digit', second: '2-digit' };
+    
+    const fecha = now.toLocaleDateString('es-ES', opcionesFecha);
+    const hora = now.toLocaleTimeString('es-ES', opcionesHora);
+    
+    return `${fecha} a las ${hora}`;
+  }
+  
+  // Seleccionar médico
+  function selectMedico() {
+    const medicoSelect = document.getElementById('selectMedico');
+    const medicoId = medicoSelect.value;
+    
+    if (!medicoId) {
+      mostrarError('Por favor seleccione un profesional');
+      return;
+    }
+    
+    const medico = medicos.find(m => m.usuario === medicoId);
+    
+    if (medico) {
+      currentUser = medico;
+      document.getElementById('loggedDoctor').textContent = medico.nombre;
+      document.getElementById('loggedRUT').textContent = medico.rut || 'No especificado';
+      updateCurrentDate();
+      
+      // Mostrar formulario principal
+      document.getElementById('medicoSelection').classList.remove('active-form');
+      document.getElementById('mainForm').classList.add('active-form');
+    } else {
+      mostrarError('Profesional no encontrado');
+    }
+  }
+  
+  // Volver a la selección de médico
+  function logout() {
+    currentUser = null;
+    document.getElementById('mainForm').classList.remove('active-form');
+    document.getElementById('addMedicoPanel').classList.remove('active-form');
+    document.getElementById('medicoSelection').classList.add('active-form');
+    limpiarFormulario();
+  }
+  
+  // Mostrar panel para agregar médico
+  function showAddMedicoPanel() {
+    document.getElementById('medicoSelection').classList.remove('active-form');
+    document.getElementById('addMedicoPanel').classList.add('active-form');
+    limpiarFormularioMedico();
+  }
+  
+  // Volver a la selección
+  function backToSelection() {
+    document.getElementById('addMedicoPanel').classList.remove('active-form');
+    document.getElementById('medicoSelection').classList.add('active-form');
+  }
+  
+  // Agregar médico
+  function agregarMedico() {
+    const nombre = document.getElementById('newMedicoNombre').value.trim();
+    const rut = document.getElementById('newMedicoRUT').value.trim();
+    const usuario = document.getElementById('newMedicoUsuario').value.trim();
+    const password = document.getElementById('newMedicoPassword').value;
+    
+    if (!nombre || !rut || !usuario || !password) {
+      mostrarError('Por favor complete todos los campos');
+      return;
+    }
+    
+    // Validar RUT del médico
+    if (!validarRun(rut)) {
+      mostrarError('El RUT del médico no es válido');
+      return;
+    }
+    
+    // Verificar si el usuario ya existe
+    if (medicos.some(m => m.usuario === usuario)) {
+      mostrarError('El nombre de usuario ya está en uso');
+      return;
+    }
+    
+    medicos.push({
+      usuario,
+      password,
+      nombre,
+      rut,
+      esPrincipal: false
+    });
+    
+    guardarMedicosEnLocalStorage();
+    mostrarExito('Profesional agregado correctamente');
+    limpiarFormularioMedico();
+    backToSelection();
+    actualizarListaMedicos();
+  }
+  
+  // Guardar médicos en localStorage
+  function guardarMedicosEnLocalStorage() {
+    try {
+      localStorage.setItem('medicos', JSON.stringify(medicos));
+    } catch (error) {
+      console.error('Error al guardar en localStorage:', error);
+    }
+  }
+  
+  // Cargar médicos de localStorage
+  function cargarMedicosDeLocalStorage() {
+    try {
+      const medicosGuardados = localStorage.getItem('medicos');
+      if (medicosGuardados) {
+        // Mantener la cuenta principal y agregar los guardados
+        const medicosCargados = JSON.parse(medicosGuardados);
+        const cuentaPrincipal = medicos.find(m => m.esPrincipal);
+        medicos = [
+          cuentaPrincipal,
+          ...medicosCargados.filter(m => !m.esPrincipal)
+        ];
+      }
+    } catch (error) {
+      console.error('Error al cargar de localStorage:', error);
+    }
+  }
+  
+  // Actualizar lista de médicos en el select
+  function actualizarListaMedicos() {
+    const select = document.getElementById('selectMedico');
+    select.innerHTML = '<option value="">-- Seleccione un profesional --</option>';
+    
+    medicos.forEach(medico => {
+      const option = document.createElement('option');
+      option.value = medico.usuario;
+      option.textContent = medico.nombre;
+      select.appendChild(option);
+    });
+  }
+  
+  // Validación de RUN/DNI
+  function validarRun(run) {
+    const regex = /^(\d{1,3}(?:\.?\d{3}){2}-[\dkK])$/i;
+    if (!regex.test(run)) return false;
+    
+    // Limpiar y verificar dígito verificador
+    const runLimpio = run.replace(/\./g, '').toUpperCase();
+    const cuerpo = runLimpio.split('-')[0];
+    const dv = runLimpio.split('-')[1];
+    
+    // Calcular DV correcto
+    let suma = 0;
+    let multiplicador = 2;
+    
+    for (let i = cuerpo.length - 1; i >= 0; i--) {
+      suma += parseInt(cuerpo.charAt(i)) * multiplicador;
+      multiplicador = multiplicador === 7 ? 2 : multiplicador + 1;
+    }
+    
+    const dvCalculado = 11 - (suma % 11);
+    let dvEsperado = dvCalculado === 11 ? '0' : dvCalculado === 10 ? 'K' : dvCalculado.toString();
+    
+    return dv === dvEsperado;
+  }
+  
+  // Validar formulario
+  function validarFormulario() {
+    if (!currentUser) {
+      mostrarError('Profesional no seleccionado. Por favor seleccione un profesional.');
+      logout();
+      return false;
+    }
+    
+    let valido = true;
+    
+    // Validar nombre
+    const nombre = document.getElementById('nombre').value.trim();
+    if (nombre.length < 5) {
+      document.getElementById('nombreError').style.display = 'block';
+      document.getElementById('nombre').classList.add('input-error');
+      valido = false;
+    } else {
+      document.getElementById('nombreError').style.display = 'none';
+      document.getElementById('nombre').classList.remove('input-error');
+    }
+    
+    // Validar RUN
+    const run = document.getElementById('run').value.trim();
+    if (!validarRun(run)) {
+      document.getElementById('runError').style.display = 'block';
+      document.getElementById('run').classList.add('input-error');
+      valido = false;
+    } else {
+      document.getElementById('runError').style.display = 'none';
+      document.getElementById('run').classList.remove('input-error');
+    }
+    
+    // Validar tratamiento
+    const tratamiento = document.getElementById('detalleTratamiento').value.trim();
+    if (tratamiento.length < 3) {
+      document.getElementById('tratamientoError').style.display = 'block';
+      document.getElementById('detalleTratamiento').classList.add('input-error');
+      valido = false;
+    } else {
+      document.getElementById('tratamientoError').style.display = 'none';
+      document.getElementById('detalleTratamiento').classList.remove('input-error');
+    }
+    
+    // Validar fecha completa
+    const fechaCompleta = document.getElementById('fechaCompleta').value.trim();
+    if (fechaCompleta.length < 10 || !fechaCompleta.includes(',')) {
+      document.getElementById('fechaError').style.display = 'block';
+      document.getElementById('fechaCompleta').classList.add('input-error');
+      valido = false;
+    } else {
+      document.getElementById('fechaError').style.display = 'none';
+      document.getElementById('fechaCompleta').classList.remove('input-error');
+    }
+    
+    // Validar fecha nacimiento
+    const nacimiento = document.getElementById('nacimiento').value;
+    if (!nacimiento) {
+      document.getElementById('nacimientoError').style.display = 'block';
+      document.getElementById('nacimiento').classList.add('input-error');
+      valido = false;
+    } else {
+      document.getElementById('nacimientoError').style.display = 'none';
+      document.getElementById('nacimiento').classList.remove('input-error');
+    }
+    
+    return valido;
+  }
+  
+  // Obtener valor de radio buttons
+  function valorRadio(name) {
+    const radios = document.getElementsByName(name);
+    for (const r of radios) {
+      if (r.checked) return r.value;
+    }
+    return 'NO'; // Default a NO si no está seleccionado
+  }
+  
+  // Inicializar firmas
+  function initFirmas() {
+    const canvasPaciente = document.getElementById('firmaPaciente');
+    const canvasProfesional = document.getElementById('firmaProfesional');
+    
+    if (canvasPaciente && canvasProfesional) {
+      // Configurar tamaño de los canvas (más grandes)
+      canvasPaciente.width = canvasPaciente.offsetWidth;
+      canvasPaciente.height = 150; // Altura aumentada
+      
+      canvasProfesional.width = canvasProfesional.offsetWidth;
+      canvasProfesional.height = 150; // Altura aumentada
+      
+      setupCanvas(canvasPaciente);
+      setupCanvas(canvasProfesional);
+      
+      // Event listeners para botones de limpiar
+      document.querySelectorAll('.limpiar-firma-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+          const canvasId = this.getAttribute('data-canvas');
+          const canvas = document.getElementById(canvasId);
+          clearCanvas(canvas);
+          
+          // Mostrar placeholder al limpiar
+          const container = canvas.closest('.firma-canvas-container');
+          if (container) {
+            container.classList.remove('firma-active');
+          }
+        });
+      });
+    }
+  }
+  
+  // Configurar canvas para firma
+  function setupCanvas(canvas) {
+    const ctx = canvas.getContext('2d');
+    ctx.strokeStyle = '#000';
+    ctx.lineWidth = 2;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    
+    // Eventos de dibujo
+    canvas.addEventListener('mousedown', function(e) {
+      isDrawing = true;
+      currentCanvas = e.target;
+      const rect = canvas.getBoundingClientRect();
+      lastX = e.clientX - rect.left;
+      lastY = e.clientY - rect.top;
+      
+      // Ocultar placeholder al comenzar a dibujar
+      const container = canvas.closest('.firma-canvas-container');
+      if (container) {
+        container.classList.add('firma-active');
+      }
+    });
+    
+    canvas.addEventListener('mousemove', draw);
+    canvas.addEventListener('mouseup', stopDrawing);
+    canvas.addEventListener('mouseout', stopDrawing);
+    
+    // Soporte para pantallas táctiles
+    canvas.addEventListener('touchstart', handleTouchStart);
+    canvas.addEventListener('touchmove', handleTouchMove);
+    canvas.addEventListener('touchend', stopDrawing);
+  }
+  
+  // Funciones de dibujo
+  function draw(e) {
+    if (!isDrawing || !currentCanvas) return;
+    
+    const canvas = currentCanvas;
+    const ctx = canvas.getContext('2d');
+    const rect = canvas.getBoundingClientRect();
+    let x, y;
+    
+    if (e.type === 'mousemove') {
+      x = e.clientX - rect.left;
+      y = e.clientY - rect.top;
+    }
+    
+    ctx.beginPath();
+    ctx.moveTo(lastX, lastY);
+    ctx.lineTo(x, y);
+    ctx.stroke();
+    
+    lastX = x;
+    lastY = y;
+  }
+  
+  function stopDrawing() {
+    isDrawing = false;
+  }
+  
+  // Manejo de toques en pantalla táctil
+  function handleTouchStart(e) {
+    e.preventDefault();
+    if (e.touches.length === 1) {
+      const touch = e.touches[0];
+      const mouseEvent = new MouseEvent('mousedown', {
+        clientX: touch.clientX,
+        clientY: touch.clientY
+      });
+      this.dispatchEvent(mouseEvent);
+    }
+  }
+  
+  function handleTouchMove(e) {
+    e.preventDefault();
+    if (e.touches.length === 1) {
+      const touch = e.touches[0];
+      const mouseEvent = new MouseEvent('mousemove', {
+        clientX: touch.clientX,
+        clientY: touch.clientY
+      });
+      this.dispatchEvent(mouseEvent);
+    }
+  }
+  
+  // Limpiar canvas
+  function clearCanvas(canvas) {
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+  }
+  
+  // Verificar si ambas firmas están completas
+  function firmasCompletas() {
+    const canvasPaciente = document.getElementById('firmaPaciente');
+    const canvasProfesional = document.getElementById('firmaProfesional');
+    
+    if (!canvasPaciente || !canvasProfesional) return true; // Si no hay canvas, no validar
+    
+    const ctxPaciente = canvasPaciente.getContext('2d');
+    const ctxProfesional = canvasProfesional.getContext('2d');
+    
+    // Verificar si se ha dibujado algo en los canvas
+    const pacienteFirmado = !ctxPaciente.getImageData(0, 0, canvasPaciente.width, canvasPaciente.height)
+      .data.every(channel => channel === 0);
+    
+    const profesionalFirmado = !ctxProfesional.getImageData(0, 0, canvasProfesional.width, canvasProfesional.height)
+      .data.every(channel => channel === 0);
+    
+    return pacienteFirmado && profesionalFirmado;
+  }
+  
+  // Convertir canvas a imagen
+  function canvasToImage(canvasId) {
+    return new Promise((resolve) => {
+      const canvas = document.getElementById(canvasId);
+      if (canvas) {
+        const image = new Image();
+        image.src = canvas.toDataURL('image/png');
+        resolve(image);
+      } else {
+        resolve(null);
+      }
+    });
+  }
+  
+  // Generar consentimiento
+  function generarConsentimiento() {
+    if (!validarFormulario()) {
+      return;
+    }
+    
+    document.getElementById('progressContainer').style.display = 'block';
+    document.getElementById('progressBar').style.width = '0%';
+    document.getElementById('progressBar').textContent = '0%';
+    
+    // Simular progreso
+    let progreso = 0;
+    const intervalo = setInterval(() => {
+      progreso += 5;
+      document.getElementById('progressBar').style.width = `${progreso}%`;
+      document.getElementById('progressBar').textContent = `${progreso}%`;
+      
+      if (progreso >= 100) {
+        clearInterval(intervalo);
+        setTimeout(() => {
+          completarGeneracion();
+        }, 300);
+      }
+    }, 100);
+  }
+  
+  function completarGeneracion() {
+    const fechaCompleta = document.getElementById('fechaCompleta').value.trim();
+    const nombre = document.getElementById('nombre').value.trim();
+    const nacimiento = document.getElementById('nacimiento').value;
+    const run = document.getElementById('run').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const telefono = document.getElementById('telefono').value.trim();
+    const profesional = document.getElementById('loggedDoctor').textContent;
+    const rutProfesional = document.getElementById('loggedRUT').textContent;
+    const detalleTratamiento = document.getElementById('detalleTratamiento').value.trim();
+    const otrasContraindicaciones = document.getElementById('otrasContraindicaciones').value.trim();
+    const otrosProcedimientos = document.getElementById('detalleOtrosProcedimientos').value.trim();
+    
+    const nacimientoFormateado = formatDateForPDF(nacimiento);
+    const fechaSolo = fechaCompleta.split(',')[1].trim();
+    const fechaHoraGeneracion = getCurrentDateTime();
+    
+    // Generar texto del consentimiento
+    consentimientoTexto = `
+CONSENTIMIENTO INFORMADO TRATAMIENTO ESTÉTICO - CLÍNICA SKILLHANDS
+
+DATOS DEL PACIENTE:
+- Nombre completo: ${nombre}
+- RUN: ${run}
+- Fecha de nacimiento: ${nacimientoFormateado}
+- Contacto: ${telefono || 'No proporcionado'} | ${email || 'No proporcionado'}
+
+PROCEDIMIENTO(S) A REALIZAR:
+${detalleTratamiento}
+
+DATOS DEL PROFESIONAL:
+- Nombre: ${profesional}
+- RUT: ${rutProfesional}
+
+FECHA Y HORA DE GENERACIÓN:
+${fechaHoraGeneracion}
+
+EVALUACIÓN MÉDICA:
+
+- Embarazo: ${valorRadio('embarazo')}
+- Hipertensión: ${valorRadio('hipertension')}
+- Problemas cardíacos: ${valorRadio('insuficiencia')}
+- Trombosis/hemorragias: ${valorRadio('trombosis')}
+- Diabetes: ${valorRadio('diabetes')}
+- Cáncer/tumores: ${valorRadio('cancer')}
+- Alergias: ${valorRadio('alergias')}
+- Dermatitis: ${valorRadio('dermatitis')}
+- Epilepsia: ${valorRadio('epilepsia')}
+- Micosis: ${valorRadio('micosis')}
+- Otros procedimientos estéticos: ${valorRadio('otros_procedimientos')}
+${otrosProcedimientos ? `  - Detalle: ${otrosProcedimientos}\n` : ''}
+
+${otrasContraindicaciones ? `OBSERVACIONES MÉDICAS:\n${otrasContraindicaciones}\n` : ''}
+
+<div class="declaraciones-section">
+DECLARACIONES:
+
+1. El profesional médico ha explicado detalladamente al paciente la naturaleza del procedimiento, incluyendo:
+   - Mecanismos de aplicación y acción
+   - Efectos secundarios posibles
+   - Contraindicaciones y riesgos
+   - Molestias durante y después del tratamiento
+   - Productos que serán aplicados
+
+2. El paciente reconoce que ha tenido la oportunidad de hacer todas las preguntas necesarias y que estas han sido respondidas satisfactoriamente.
+
+3. El paciente comprende que los resultados estéticos no pueden ser garantizados con exactitud y que los procedimientos son de medios, no de resultados.
+
+4. El paciente se compromete a:
+   - Seguir las instrucciones pre y post tratamiento
+   - Proporcionar información veraz sobre su historial médico
+   - Informar cualquier cambio en su estado de salud
+
+5. El profesional médico certifica que ha evaluado al paciente y considera que el tratamiento es apropiado para su caso, habiendo descartado contraindicaciones absolutas.
+</div>
+
+<div class="firmas-section">
+<div class="firmas-container">
+  <div class="firma-section">
+    <h4>Firma del Paciente</h4>
+    <div class="firma-canvas-container">
+      <canvas id="firmaPaciente" width="300" height="150"></canvas>
+      <div class="placeholder-text">Firme dentro de este área</div>
+      <button type="button" class="limpiar-firma-btn" data-canvas="firmaPaciente">Limpiar Firma</button>
+    </div>
+    <div class="firma-info">
+      <p>Nombre: ${nombre}</p>
+      <p>RUN: ${run}</p>
+      <p>Fecha: ${fechaSolo}</p>
+    </div>
+  </div>
+  
+  <div class="firma-section">
+    <h4>Firma del Profesional</h4>
+    <div class="firma-canvas-container">
+      <canvas id="firmaProfesional" width="300" height="150"></canvas>
+      <div class="placeholder-text">Firme dentro de este área</div>
+      <button type="button" class="limpiar-firma-btn" data-canvas="firmaProfesional">Limpiar Firma</button>
+    </div>
+    <div class="firma-info">
+      <p>Nombre: ${profesional}</p>
+      <p>RUT: ${rutProfesional}</p>
+      <p>Fecha: ${fechaSolo}</p>
+    </div>
+  </div>
+</div>
+
+<div class="firma-validation" style="display: none;">
+  <p class="validation-message">Ambas firmas son requeridas para completar el documento.</p>
+</div>
+</div>
+`;
+
+    document.getElementById('consentimiento').innerHTML = consentimientoTexto;
+    document.getElementById('progressContainer').style.display = 'none';
+    document.getElementById('successMessage').style.display = 'block';
+    document.getElementById('imprimirBtn').disabled = false;
+    
+    // Inicializar los canvas de firma (ahora más grandes)
+    initFirmas();
+    
+    setTimeout(() => {
+      document.getElementById('successMessage').style.display = 'none';
+    }, 5000);
+  }
+  
+  // Imprimir consentimiento
+  function imprimirConsentimiento() {
+    if (!consentimientoTexto || !currentUser) {
+      mostrarError('Operación no permitida. Genere el consentimiento primero.');
+      return;
+    }
+    
+    if (!firmasCompletas()) {
+      document.querySelector('.firma-validation').style.display = 'block';
+      mostrarError('Por favor complete ambas firmas antes de imprimir.');
+      return;
+    }
+    
+    // Configurar nombre del documento
+    const nombrePaciente = document.getElementById('nombre').value.trim();
+    const apellidoPaciente = nombrePaciente.split(' ').slice(-1)[0];
+    document.title = `Consentimiento ${nombrePaciente} ${apellidoPaciente}`;
+    
+    window.print();
+  }
+  
+  // Limpiar formulario
+  function limpiarFormulario() {
+    document.getElementById('consentimiento').textContent = '';
+    document.getElementById('imprimirBtn').disabled = true;
+    document.getElementById('successMessage').style.display = 'none';
+    
+    // Resetear campos del paciente pero mantener profesional y fecha
+    document.getElementById('nombre').value = '';
+    document.getElementById('nacimiento').value = '';
+    document.getElementById('run').value = '';
+    document.getElementById('email').value = '';
+    document.getElementById('telefono').value = '';
+    document.getElementById('detalleTratamiento').value = '';
+    document.getElementById('otrasContraindicaciones').value = '';
+    document.getElementById('detalleOtrosProcedimientos').value = '';
+    document.getElementById('otrosProcedimientosContainer').style.display = 'none';
+    
+    // Resetear radios
+    const radios = document.querySelectorAll('input[type="radio"]');
+    radios.forEach(radio => radio.checked = false);
+    
+    // Actualizar fecha
+    updateCurrentDate();
+    
+    // Limpiar errores
+    const errors = document.querySelectorAll('.error-message');
+    errors.forEach(error => error.style.display = 'none');
+    
+    const inputs = document.querySelectorAll('input, textarea');
+    inputs.forEach(input => input.classList.remove('input-error'));
+  }
+  
+  // Limpiar formulario de médico
+  function limpiarFormularioMedico() {
+    document.getElementById('newMedicoNombre').value = '';
+    document.getElementById('newMedicoRUT').value = '';
+    document.getElementById('newMedicoUsuario').value = '';
+    document.getElementById('newMedicoPassword').value = '';
+  }
+  
+  // Mostrar mensaje de error
+  function mostrarError(mensaje) {
+    alert(mensaje);
+    console.error(mensaje);
+  }
+  
+  // Mostrar mensaje de éxito
+  function mostrarExito(mensaje) {
+    alert(mensaje);
+    console.log(mensaje);
+  }
+  
+  // Autocompletado para procedimientos
+  function setupAutocompletado() {
+    const input = document.getElementById('detalleTratamiento');
+    const lista = document.getElementById('autocompleteList');
+    
+    input.addEventListener('input', function() {
+      const texto = this.value.toLowerCase();
+      lista.innerHTML = '';
+      
+      if (texto.length < 2) {
+        lista.style.display = 'none';
+        return;
+      }
+      
+      const coincidencias = procedimientosComunes.filter(proc => 
+        proc.toLowerCase().includes(texto)
+      );
+      
+      if (coincidencias.length > 0) {
+        coincidencias.forEach(proc => {
+          const item = document.createElement('div');
+          item.className = 'autocomplete-item';
+          item.textContent = proc;
+          item.addEventListener('click', function() {
+            input.value = proc;
+            lista.style.display = 'none';
+          });
+          lista.appendChild(item);
+        });
+        lista.style.display = 'block';
+      } else {
+        lista.style.display = 'none';
+      }
+    });
+    
+    // Ocultar lista al hacer clic fuera
+    document.addEventListener('click', function(e) {
+      if (e.target !== input) {
+        lista.style.display = 'none';
+      }
+    });
+  }
+  
+  // Toggle para mostrar/ocultar contraseña
+  function setupTogglePassword() {
+    document.getElementById('toggleNewPassword').addEventListener('click', function() {
+      const passwordInput = document.getElementById('newMedicoPassword');
+      const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+      passwordInput.setAttribute('type', type);
+      this.textContent = type === 'password' ? '👁️' : '👁️‍🗨️';
+    });
+  }
+  
+  // Mostrar/ocultar campo de otros procedimientos
+  function setupOtrosProcedimientos() {
+    const radios = document.getElementsByName('otros_procedimientos');
+    const container = document.getElementById('otrosProcedimientosContainer');
+    
+    radios.forEach(radio => {
+      radio.addEventListener('change', function() {
+        if (this.value === 'SI') {
+          container.style.display = 'block';
+        } else {
+          container.style.display = 'none';
+          document.getElementById('detalleOtrosProcedimientos').value = '';
+        }
+      });
+    });
+  }
+  
+  // Inicializar la aplicación
+  function init() {
+    cargarMedicosDeLocalStorage();
+    actualizarListaMedicos();
+    updateCurrentDate();
+    setupAutocompletado();
+    setupTogglePassword();
+    setupOtrosProcedimientos();
+    
+    // Event listeners
+    document.getElementById('selectBtn').addEventListener('click', selectMedico);
+    document.getElementById('logoutBtn').addEventListener('click', logout);
+    document.getElementById('addMedicoBtn').addEventListener('click', showAddMedicoPanel);
+    document.getElementById('backToLoginBtn').addEventListener('click', backToSelection);
+    document.getElementById('saveMedicoBtn').addEventListener('click', agregarMedico);
+    document.getElementById('generarBtn').addEventListener('click', generarConsentimiento);
+    document.getElementById('imprimirBtn').addEventListener('click', imprimirConsentimiento);
+    document.getElementById('limpiarBtn').addEventListener('click', limpiarFormulario);
+    
+    // Validación en tiempo real
+    document.getElementById('run').addEventListener('blur', function() {
+      if (!validarRun(this.value.trim())) {
+        document.getElementById('runError').style.display = 'block';
+        this.classList.add('input-error');
+      } else {
+        document.getElementById('runError').style.display = 'none';
+        this.classList.remove('input-error');
+      }
+    });
+    
+    document.getElementById('email').addEventListener('blur', function() {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (this.value.trim() && !emailRegex.test(this.value.trim())) {
+        document.getElementById('emailError').style.display = 'block';
+        this.classList.add('input-error');
+      } else {
+        document.getElementById('emailError').style.display = 'none';
+        this.classList.remove('input-error');
+      }
+    });
+    
+    // Validar RUT del médico al agregar/editar
+    document.getElementById('newMedicoRUT').addEventListener('blur', function() {
+      if (!validarRun(this.value.trim())) {
+        mostrarError('El RUT del médico no es válido');
+        this.classList.add('input-error');
+      } else {
+        this.classList.remove('input-error');
+      }
+    });
+  }
+  
+  // Iniciar la aplicación cuando el DOM esté listo
+  document.addEventListener('DOMContentLoaded', init);
+</script>
+
+</body>
+</html>
