@@ -1,0 +1,30 @@
+name: Consentimiento — sintaxis estática gratuita
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'index.html'
+      - 'bridge-test.html'
+      - '.github/scripts/validate-static.mjs'
+      - '.github/workflows/ci-static.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: consentimiento-static-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  syntax:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node .github/scripts/validate-static.mjs
