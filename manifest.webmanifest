@@ -1,0 +1,9 @@
+{
+  "name": "Consentimiento Estético",
+  "short_name": "Consentimiento",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#faf9f7",
+  "theme_color": "#d4b996"
+}
